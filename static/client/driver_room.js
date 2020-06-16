@@ -3,23 +3,37 @@
 //==============================================================================
 
 //-- Dependencies --------------------------------
-import { driverCreate } from  './driver.js';
-import {
-    blank,
-    drawImage,
-} from './skin.js';
-import { roomGet } from '../game/room.js';
-import { playerGet } from '../game/index.js';
-import { commandState } from './key_state.js';
 import {
     NORTH,
     SOUTH,
     EAST,
     WEST,
-} from './constants.js';
+} from '../constants.js';
+import { roomGet } from '../game/room.js';
+import { playerGet } from '../game/index.js';
+import {
+    driverCreate,
+    CSS_CLASS_ACTIVE,
+} from  './driver.js';
+import {
+    blank,
+    drawImage,
+} from './graphics.js';
+import { commandState } from './key_state.js';
 
 //------------------------------------------------
 export default driverCreate({
+    configure({ idGameArea }) {
+        this.containerId = idGameArea;
+    },
+    focused() {
+        const container = document.getElementById(this.containerId);
+        container.classList.add(CSS_CLASS_ACTIVE);
+    },
+    blurred() {
+        const container = document.getElementById(this.containerId);
+        container.classList.remove(CSS_CLASS_ACTIVE);
+    },
     iterate() {
         //
         let deltaX = 0;

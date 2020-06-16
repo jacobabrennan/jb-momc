@@ -9,7 +9,7 @@ import {
     SOUTH,
     EAST,
     WEST,
-} from "./constants.js";
+} from '../constants.js';
 
 //-- Constants -----------------------------------
 // note canonical (lowercase) representation
@@ -31,7 +31,7 @@ const keyMap = {};
 const keyState = {};
 
 //-- Setup ---------------------------------------
-export async function setup({ idContainer }) {
+export async function setup() {
     // Generate keyMap from preferences
     for(const command in preferences) {
         const key = preferences[command];
@@ -45,7 +45,7 @@ export async function setup({ idContainer }) {
         handleKeyUp(eventKeyUp.key.toLowerCase());
     }
     // Connect event handlers to keyState system
-    const container = document;//.getElementById(idContainer);
+    const container = document;
     container.addEventListener('keydown', handleEventKeyDown);
     container.addEventListener('keyup'  , handleEventKeyUp  );
 }

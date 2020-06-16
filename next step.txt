@@ -1,0 +1,23 @@
+Done:
+    Server Exists
+    Server can serve client files (static directory)
+    Server accept websocket connections
+    Server can connect clients to player objects
+    Messages can be sent between client and Server
+    Client Exists
+    Client can switch between viewing different "drivers"
+    Client can login via form driver
+    Client can display graphics
+    Client can display their own player in a room
+    Main game loop exists
+    Player can be moved via keyboard commands
+    Player can transfer between rooms (on the client)
+
+Next steps:
+    Tell the server about room transfers
+    Connect clients to each other on room transfers
+    Make WebRTC data channel
+    Send player position data
+    Make WebRTC audio channel
+    Make audio graphs
+    

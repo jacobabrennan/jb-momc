@@ -4,22 +4,16 @@
 
 //-- Dependencies --------------------------------
 import client from './client/index.js';
-import { start } from './game/index.js';
-import driverRoom from './client/driverRoom.js';
 
 //-- Constants -----------------------------------
-const ID_CONTAINER = 'game_area';
+const ID_GAME_AREA = 'game_area';
+const ID_LOGIN_FORM = 'login_form';
 const ADDRESS_CONNECTION = 'ws://localhost:7231/data';
 
 //------------------------------------------------
 const configuration = {
-    idContainer: ID_CONTAINER,
+    idGameArea: ID_GAME_AREA,
+    idLoginForm: ID_LOGIN_FORM,
     addressConnection: ADDRESS_CONNECTION,
 };
-client.setup(configuration)
-.then(function () {
-    start();
-})
-.then(function () {
-    client.focus(driverRoom);
-});
+client.setup(configuration);

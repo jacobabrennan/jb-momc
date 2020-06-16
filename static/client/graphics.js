@@ -16,31 +16,15 @@ let context;
 let frameLast = 0;
 
 //------------------------------------------------
-export async function setup({ idContainer }) {
-    // Manage DOM
-    const container = document.getElementById(idContainer);
+export async function setup({ idGameArea }) {
+    // Create drawing context
+    const container = document.getElementById(idGameArea);
     const canvas = document.createElement('canvas');
     container.appendChild(canvas);
-    // Create drawing context
     context = canvas.getContext('2d');
-    // Configure html container for displaying the client
-    container.style.width = '100vw';
-    container.style.height = '100vh';
-    container.style.display = 'flex';
-    container.style.justifyContent = 'center';
-    container.style.alignItems = 'center';
     // Configure the client display area
     canvas.width = SIZE_WIDTH_DEFAULT;
     canvas.height = SIZE_HEIGHT_DEFAULT;
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.objectFit = 'contain';
-    canvas.style.backgroundColor = 'black';
-    canvas.style.imageRendering = 'crisp-edges';
-    canvas.style.imageRendering = '-moz-crisp-edges';
-    canvas.style.imageRendering = '-webkit-crisp-edges';
-    canvas.style.imageRendering = 'pixelated';
-    canvas.style.imageRendering = 'crisp-edges';
     // Begin animating
     animationIterate(0);
 }

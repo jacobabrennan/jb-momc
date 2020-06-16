@@ -4,9 +4,22 @@
         <meta charset="utf-8" />
         <title>3mile</title>
         <script type="module" src="index.js"></script>
+        <script src="simplepeer.min.js"></script>
         <link rel="stylesheet" href="reset.css" />
+        <link rel="stylesheet" href="layout.css" />
     </head>
     <body>
         <div id="game_area"></div>
+        <form id="login_form">
+            <fieldset>
+                <legend>Log In</legend>
+                <label for="username">User Name</label>
+                <input type="text" name="username" />
+                <label for="password">Password</label>
+                <input type="password" name="password" />
+                <button type="submit">Submit</button>
+            </fieldset>
+        </form>
+        </div>
     </body>
 </html>

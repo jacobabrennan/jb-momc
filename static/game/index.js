@@ -5,6 +5,8 @@
 //-- Dependencies --------------------------------
 import Character from './character.js';
 import Room, { EXIT_LEFT } from './room.js';
+import client from '../client/index.js';
+import driverRoom from '../client/driver_room.js';
 
 //-- Constants -----------------------------------
 const ID_ROOM_TEST = 'test';
@@ -23,4 +25,5 @@ export function start() {
     roomFirst.exitLink(EXIT_LEFT, ID_ROOM_LEFTTEST);
     player = new Character();
     player.roomTransfer(ID_ROOM_TEST);
+    client.focus(driverRoom)
 }
