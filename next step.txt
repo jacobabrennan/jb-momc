@@ -23,13 +23,25 @@ Done:
     Refactor WebRTC/Audio -> Player
     Spacialize audio
     Rooms composed of tiles
-
-Next steps:
     Movement takes tiles into consideration
-    Warp tiles
     Refactor particles, characters, and players
     Create environment types (atoms)
+    Scrolling rooms
+    Volume attenuates with distance
+    Paralax
+
+Next steps:
     Map environment
+    Fade on room transfer
+
+Cool Features:
+    Boats
+    Hula
+    Choice of animals
+    Loons
     
-Deferred
+Deferred:
     Add video
+    Virtual Matt Smith
+    Thomas Brown Chainsaw Ice Fire Extravaganza
+    Warp tiles

@@ -14,6 +14,12 @@ export const ACTION_WEBRTC_SIGNAL = 'webrtc signal';
 
 //-- Map Metrics ---------------------------------
 export const SIZE_TILE = 16;
+export const MAP_KEY_DEPTH = 36; // Radix of keys in map text strings;
+
+//-- Room Linking --------------------------------
+export const ID_ROOM_START = 'start';
+export const EXIT_LEFT = Symbol('Exit Left');
+export const EXIT_RIGHT = Symbol('Exit Right');
 
 //-- Directions ----------------------------------
 export const NORTH = 1;
@@ -26,3 +32,7 @@ export const MOVEMENT_EMPTY = 1;
 export const MOVEMENT_SOLID = 2;
 export const MOVEMENT_WATER = 4;
 export const MOVEMENT_FLORA = 8;
+
+//-- Client Display ------------------------------
+export const SIZE_WIDTH_DEFAULT = 16*SIZE_TILE;
+export const SIZE_HEIGHT_DEFAULT = 9*SIZE_TILE;

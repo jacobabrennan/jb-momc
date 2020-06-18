@@ -3,37 +3,44 @@
 //==============================================================================
 
 //-- Dependencies --------------------------------
-import Particle from './particle.js';
 import {
-    ACTION_TRANSFER,
     SIZE_TILE,
-} from '../constants.js';
-import { messageSend } from '../client/network.js';
-import {
+    MOVEMENT_EMPTY,
     EXIT_LEFT,
     EXIT_RIGHT,
-    roomGet,
-} from './room.js';
+    ACTION_TRANSFER,
+} from '../constants.js';
+import { messageSend } from '../client/network.js';
 import { repositionListener } from '../client/audio.js';
 import {
     playerRemoteClearAll,
     broadcast,
 } from '../client/playerRemote.js';
+import Particle from './particle.js';
+import { roomGet } from './room.js';
 
 //------------------------------------------------
 export default class Character extends Particle {
     width = 16
     height = 16
+    movement = MOVEMENT_EMPTY
+    speed = 2
     move(deltaX, deltaY) {
-        //
+        // Cancel if not currently in a room
         const roomCurrent = roomGet(this.roomId);
         if(!roomCurrent) { return false;}
-        //
+        // Signal success if moving by zero magnitude (no op)
         if(!(deltaX || deltaY)) { return true;}
-        //
-        const transfered = this.transferCheck(deltaX, deltaY);
-        if(transfered) { return true;}
-        //
+        // Attempt transfer if movement crosses room boundry
+        const exitDirection = transferCheck(this, deltaX, deltaY);
+        if(exitDirection) {
+            const roomIdExit = roomCurrent.exitGet(exitDirection);
+            if(roomIdExit) {
+                const transfered = this.transfer(roomIdExit, exitDirection);
+                if(transfered) { return true;}
+            }
+        }
+        // Move across tile grid
         const success = attemptMove(this, deltaX, deltaY);
         if(!success) { return false;}
         repositionListener(this.x, this.y);
@@ -41,121 +48,19 @@ export default class Character extends Particle {
             x: this.x,
             y: this.y,
         });
-        return true;
-    }
-    transferCheck(deltaX, deltaY) {
-        //
-        const roomCurrent = roomGet(this.roomId);
-        //
-        let exitDirection;
-        if(deltaX > 0) {
-            if((roomCurrent.width*SIZE_TILE) - (this.x+this.width) < deltaX) {
-                exitDirection = EXIT_RIGHT;
-            }
-        } else if(deltaX < 0) {
-            if(Math.abs(deltaX) > this.x) {
-                exitDirection = EXIT_LEFT;
-            }
-        }
-        // if(deltaY > 0) {
-        //     if((roomCurrent.height*SIZE_TILE) - (this.y+this.height) < deltaY) {
-        //         exitDirection = EXIT_NORTH;
-        //     }
-        // } else if(deltaY < 0) {
-        //     if(Math.abs(deltaY) > this.y) {
-        //         exitDirection = EXIT_SOUTH;
-        //     }
-        // }
-        //
-        const roomIdExit = roomCurrent.exitGet(exitDirection);
-        if(!roomIdExit) { return false;}
-        return this.roomTransfer(roomIdExit, exitDirection);
-    }
-    roomTransfer(idRoomNew, exitDirection) {
-        // Do nothing if transfering to same room
-        if(idRoomNew === this.roomId) { return true;}
-        // Get old and new rooms
-        const roomOld = roomGet(this.roomId);
-        const roomNew = roomGet(idRoomNew);
-        // Check if movement is allowed, signal failure if necessary
-        if(roomOld) {
-            if(!roomOld.transferExitPermission(this)) { return false;}
-        }
-        if(roomNew) {
-            if(!roomNew.transferEnterPermission(this)) { return false;}
-        }
-        // Remove from old room
-        if(roomOld) {
-            roomOld.transferExit(this);
-        }
-        this.roomId = null;
-        playerRemoteClearAll();
-        // Place in new room
-        if(roomNew) {
-            roomNew.transferEnter(this);
-        }
-        this.roomId = roomNew.id;
-        // Reposition based on exit direction
-        if(exitDirection === EXIT_LEFT) {
-            this.x = (roomNew.width*SIZE_TILE) - this.width;
-        }
-        if(exitDirection === EXIT_RIGHT) {
-            this.x = 0;
-        }
-        // Update server to room change
-        messageSend(ACTION_TRANSFER, this.roomId);
         // Signal Success
         return true;
     }
-    // move(deltaX, deltaY) {
-    //     //
-    //     const roomCurrent = roomGet(this.roomId);
-    //     if(!roomCurrent) { return false;}
-    //     //
-    //     this.x += deltaX;
-    //     this.y += deltaY;
-    //     //
-    //     let exitDirection;
-    //     const roomOldWidthFull = roomCurrent.width*SIZE_TILE;
-    //     if(this.x < 0) {
-    //         exitDirection = EXIT_LEFT;
-    //     }
-    //     else if(this.x + this.width >= roomOldWidthFull) {
-    //         exitDirection = EXIT_RIGHT;
-    //     }
-    //     const roomIdExit = roomCurrent.exitGet(exitDirection);
-    //     if(roomIdExit) {
-    //         return this.roomTransfer(roomIdExit, exitDirection);
-    //     }
-    //     //
-    //     const roomNewWidthFull = roomCurrent.width*SIZE_TILE;
-    //     const roomNewHeightFull = roomCurrent.width*SIZE_TILE;
-    //     if(this.x < 0) {
-    //         this.x = 0;
-    //     }
-    //     if(this.x+this.width >= roomNewWidthFull) {
-    //         this.x = roomNewWidthFull-(this.width);
-    //     }
-    //     if(this.y < 0) {
-    //         this.y = 0;
-    //     }
-    //     if(this.y+this.height >= roomNewHeightFull) {
-    //         this.y = roomNewHeightFull-(this.height);
-    //     }
-    //     //
-    //     repositionListener(this.x, this.y);
-    //     //
-    //     broadcast({
-    //         x: this.x,
-    //         y: this.y,
-    //     });
-    //     //
-    //     return true;
-    // }
+    transfer(roomIdNew, exitDirection) {
+        // Signal success if transfering to current room (no op)
+        // if(idRoomNew === mover.roomId) { return true;}
+            // Disabled: circular rooms
+        return attemptTransfer(this, roomIdNew, exitDirection);
+    }
 }
 
 
-//==============================================================================
+//== Movement Utilities ========================================================
 
 //------------------------------------------------
 function attemptMove(mover, deltaX, deltaY) {
@@ -300,4 +205,70 @@ function movePermission(mover, deltaX, deltaY) {
         deltaYProceed: (blockedY? 0 : deltaY),
         tilesEntering: tilesEntering,
     };
+}
+
+
+//== Transfer Utilities ========================================================
+
+//------------------------------------------------
+function attemptTransfer(mover, idRoomNew, exitDirection) {
+    // Get old and new rooms
+    const roomOld = roomGet(mover.roomId);
+    const roomNew = roomGet(idRoomNew);
+    if(!roomNew) { return false;}
+    // Check if movement is allowed
+    if(roomOld) {
+        if(!roomOld.transferExitPermission(mover)) { return false;}
+    }
+    if(roomNew) {
+        if(!roomNew.transferEnterPermission(mover)) { return false;}
+    }
+    // Remove from old room
+    if(roomOld) {
+        roomOld.transferExit(mover);
+    }
+    mover.roomId = null;
+    playerRemoteClearAll();
+    // Place in new room
+    roomNew.transferEnter(mover);
+    mover.roomId = roomNew.id;
+    // Reposition based on exit direction
+    if(exitDirection === EXIT_LEFT) {
+        mover.x = (roomNew.width*SIZE_TILE) - mover.width;
+    }
+    if(exitDirection === EXIT_RIGHT) {
+        mover.x = 0;
+    }
+    // Update server to room change
+    messageSend(ACTION_TRANSFER, mover.roomId);
+    // Signal Success
+    return true;
+}
+
+//------------------------------------------------
+function transferCheck(mover, deltaX, deltaY) {
+    //
+    const roomCurrent = roomGet(mover.roomId);
+    //
+    let exitDirection;
+    if(deltaX > 0) {
+        if((roomCurrent.width*SIZE_TILE) - (mover.x+mover.width) < deltaX) {
+            exitDirection = EXIT_RIGHT;
+        }
+    } else if(deltaX < 0) {
+        if(Math.abs(deltaX) > mover.x) {
+            exitDirection = EXIT_LEFT;
+        }
+    }
+    // if(deltaY > 0) {
+    //     if((roomCurrent.height*SIZE_TILE) - (mover.y+mover.height) < deltaY) {
+    //         exitDirection = EXIT_NORTH;
+    //     }
+    // } else if(deltaY < 0) {
+    //     if(Math.abs(deltaY) > mover.y) {
+    //         exitDirection = EXIT_SOUTH;
+    //     }
+    // }
+    //
+    return exitDirection;
 }

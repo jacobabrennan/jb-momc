@@ -31,10 +31,16 @@ class Graphic {
     }
 }
 const graphicLoadingList = [
-    new Graphic('kitten', 'rsc/144.jpg', 256, 144),
     new Graphic('bird', 'rsc/bird.png'),
     new Graphic('grass', 'rsc/grass.png'),
     new Graphic('sky', 'rsc/sky.png'),
+    new Graphic('dock', 'rsc/dock_2.png'),
+    new Graphic('dockFace', 'rsc/dock_face.png'),
+    new Graphic('dockCap', 'rsc/dock_cap_2.png'),
+    new Graphic('dockShadow', 'rsc/dock2_shadow.png'),
+    new Graphic('dockMottle', 'rsc/dock2_mottle.png'),
+    new Graphic('dock384', 'rsc/dock_paralax384.png', 384, 144),
+    new Graphic('dock512', 'rsc/dock_paralax512.png', 512, 144),
 ];
 
 //------------------------------------------------

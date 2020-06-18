@@ -3,10 +3,7 @@
 //==============================================================================
 
 //-- Dependencies --------------------------------
-
-//-- Constants -----------------------------------
-export const EXIT_LEFT = Symbol('Exit Left');
-export const EXIT_RIGHT = Symbol('Exit Right');
+import { MAP_KEY_DEPTH } from '../constants.js';
 
 //-- Module State --------------------------------
 const rooms = {};
@@ -16,18 +13,28 @@ export function roomGet(idRoom) {
 
 //-- Main Class Export ---------------------------
 export default class Room {
-    constructor(id, roomModel) {
+    constructor(id, width, height, tiles, tileString, exits, layers) {
         //
         this.id = id;
         rooms[this.id] = this;
+        this.width = width;
+        this.height = height;
+        this.tileTypes = tiles;
+        //
+        const chars = tileString.split('');
+        this.tileGrid = [];
+        for(let posY = height-1; posY >= 0; posY--) { // Flip string!
+            for(let posX = 0; posX < width; posX++) {
+                const indexCompound = posY*width + posX;
+                const char = chars[indexCompound];
+                const indexTile = parseInt(char, MAP_KEY_DEPTH);
+                this.tileGrid.push(indexTile);
+            }
+        }
         //
         this.particles = [];
-        this.exits = [];
-        //
-        this.width = roomModel.width;
-        this.height = roomModel.height;
-        this.tileGrid = roomModel.tileGrid;
-        this.tileTypes = roomModel.tileTypes;
+        this.exits = exits || {};
+        this.layers = layers || [];
     }
 }
 
@@ -35,18 +42,18 @@ export default class Room {
 Room.prototype.exitGet = function (exit) {
     return this.exits[exit];
 }
-Room.prototype.exitLink = function (exit, idRoomDestination) {
-    //
-    this.exits[exit] = idRoomDestination;
-    //
-    const destination = roomGet(idRoomDestination);
-    if(!destination) { return;}
-    let mirrorExit;
-    if(exit === EXIT_LEFT ) { mirrorExit = EXIT_RIGHT;}
-    if(exit === EXIT_RIGHT) { mirrorExit = EXIT_LEFT ;}
-    if(!mirrorExit) { return;}
-    destination.exits[mirrorExit] = this.id;
-}
+// Room.prototype.exitLink = function (exit, idRoomDestination) {
+//     //
+//     this.exits[exit] = idRoomDestination;
+//     //
+//     const destination = roomGet(idRoomDestination);
+//     if(!destination) { return;}
+//     let mirrorExit;
+//     if(exit === EXIT_LEFT ) { mirrorExit = EXIT_RIGHT;}
+//     if(exit === EXIT_RIGHT) { mirrorExit = EXIT_LEFT ;}
+//     if(!mirrorExit) { return;}
+//     destination.exits[mirrorExit] = this.id;
+// }
 
 //-- Transfer (movement) -------------------------
 Room.prototype.transferExitPermission = function (particleMover) {

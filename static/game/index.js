@@ -3,15 +3,11 @@
 //==============================================================================
 
 //-- Dependencies --------------------------------
-import Character from './character.js';
-import Room, { EXIT_LEFT } from './room.js';
 import client from '../client/index.js';
 import driverRoom from '../client/driver_room.js';
-import roomModel from './map/test.js';
-
-//-- Constants -----------------------------------
-const ID_ROOM_TEST = 'test';
-const ID_ROOM_LEFTTEST = 'LEFT test'
+import { ID_ROOM_START } from '../constants.js';
+import { mapGenerateRooms } from './room_models.js';
+import Character from './character.js';
 
 //-- Module State --------------------------------
 let player;
@@ -21,10 +17,8 @@ export function playerGet() {
 
 //------------------------------------------------
 export function start() {
-    let roomFirst = new Room(ID_ROOM_TEST, roomModel);
-    new Room(ID_ROOM_LEFTTEST, roomModel);
-    roomFirst.exitLink(EXIT_LEFT, ID_ROOM_LEFTTEST);
+    mapGenerateRooms();
     player = new Character();
-    player.roomTransfer(ID_ROOM_TEST);
+    player.transfer(ID_ROOM_START);
     client.focus(driverRoom)
 }

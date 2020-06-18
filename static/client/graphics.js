@@ -3,13 +3,14 @@
 //==============================================================================
 
 //-- Dependencies --------------------------------
-import { SIZE_TILE } from '../constants.js';
+import {
+    SIZE_WIDTH_DEFAULT,
+    SIZE_HEIGHT_DEFAULT,
+} from '../constants.js';
 import { graphicGet } from './resource_library.js';
 import client from './index.js';
 
 //-- Constants -----------------------------------
-const SIZE_WIDTH_DEFAULT = 16*SIZE_TILE;
-const SIZE_HEIGHT_DEFAULT = 9*SIZE_TILE;
 const DELAY_ITERATION = 1000/30;
 
 //-- Module State --------------------------------
@@ -64,5 +65,6 @@ export function drawImage(idGraphic, posX, posY) {
     let drawX = posX;
     let drawY = SIZE_HEIGHT_DEFAULT - posY;
     let theGraphic = graphicGet(idGraphic);
+    if(!theGraphic) { return;}
     theGraphic.draw(context, drawX, drawY);
 }
