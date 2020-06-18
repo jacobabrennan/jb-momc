@@ -33,7 +33,7 @@ const keyState = {};
 //-- Setup ---------------------------------------
 export async function setup() {
     // Generate keyMap from preferences
-    for(const command in preferences) {
+    for(let command in preferences) {
         const key = preferences[command];
         keyMap[key] = command;
     }

@@ -28,6 +28,15 @@ export function playerLogin(idPlayer, client) {
     player.clientAttach(client);
     return player;
 }
+export function playerLogout(idPlayer) {
+    //
+    let player = players[idPlayer];
+    if(!player) { return;}
+    //
+    delete players[idPlayer]
+    //
+    player.dispose();
+}
 
 //------------------------------------------------
 class Player {
@@ -37,6 +46,9 @@ class Player {
         if(players[id]) { throw ERROR_PLAYER_ID_CONFLICT;}
         this.id = id;
         players[this.id] = this;
+    }
+    dispose() {
+
     }
     clientAttach(client) {
         this.client = client;

@@ -4,6 +4,7 @@
 
 //-- Dependencies --------------------------------
 import {
+    SIZE_TILE,
     NORTH,
     SOUTH,
     EAST,
@@ -20,13 +21,14 @@ import {
     drawImage,
 } from './graphics.js';
 import { commandState } from './key_state.js';
+import { spritesGet } from './playerRemote.js';
 
 //------------------------------------------------
 export default driverCreate({
     configure({ idGameArea }) {
         this.containerId = idGameArea;
     },
-    focused() {
+    async focused() {
         const container = document.getElementById(this.containerId);
         container.classList.add(CSS_CLASS_ACTIVE);
     },
@@ -50,11 +52,27 @@ export default driverCreate({
         player.move(deltaX, deltaY);
     },
     display() {
+        //
         blank();
+        //
         const player = playerGet();
         const roomCurrent = roomGet(player.roomId);
-        for(const indexedParticle of roomCurrent.particles) {
+        //
+        for(let posY = 0; posY < roomCurrent.height; posY++) {
+            for(let posX = 0; posX < roomCurrent.width; posX++) {
+                const indexCompound = posY*roomCurrent.width + posX;
+                const indexTileModel = roomCurrent.tileGrid[indexCompound];
+                const tileModel = roomCurrent.tileTypes[indexTileModel];
+                drawImage(tileModel.graphic, posX*SIZE_TILE, posY*SIZE_TILE);
+            }
+        }
+        //
+        for(let indexedParticle of roomCurrent.particles) {
             drawParticle(indexedParticle);
+        }
+        const sprites = spritesGet();
+        for(let sprite of sprites) {
+            drawImage('bird', sprite.x, sprite.y);
         }
     },
 });

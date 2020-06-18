@@ -4,7 +4,7 @@
 
 import {
     ACTION_OCCUPANCY,
-    ACTION_OCCUPANCY_JOIN,
+    // ACTION_OCCUPANCY_JOIN,
     ACTION_OCCUPANCY_LEAVE,
 } from '../static/constants.js';
 
@@ -32,14 +32,14 @@ export class Room {
         this.occupants.push(playerNew);
         //
         const occupantIds = [];
-        for(const occupant of this.occupants) {
+        for(let occupant of this.occupants) {
             if(occupant === playerNew) { continue;}
             occupantIds.push(occupant.id);
             //
-            occupant.client.dataSend({
-                action: ACTION_OCCUPANCY_JOIN,
-                data: playerNew.id,
-            });
+            // occupant.client.dataSend({
+            //     action: ACTION_OCCUPANCY_JOIN,
+            //     data: playerNew.id,
+            // });
         }
         //
         playerNew.client.dataSend(ACTION_OCCUPANCY, occupantIds);
@@ -55,11 +55,8 @@ export class Room {
             return;
         }
         //
-        for(const occupant of this.occupants) {
-            occupant.client.dataSend({
-                action: ACTION_OCCUPANCY_LEAVE,
-                data: playerOld.id,
-            });
+        for(let occupant of this.occupants) {
+            occupant.client.dataSend(ACTION_OCCUPANCY_LEAVE, playerOld.id);
         }
     }
 }

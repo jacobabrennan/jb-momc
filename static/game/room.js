@@ -16,15 +16,18 @@ export function roomGet(idRoom) {
 
 //-- Main Class Export ---------------------------
 export default class Room {
-    width = 256
-    height = 144
-    constructor(id) {
+    constructor(id, roomModel) {
         //
         this.id = id;
         rooms[this.id] = this;
         //
         this.particles = [];
         this.exits = [];
+        //
+        this.width = roomModel.width;
+        this.height = roomModel.height;
+        this.tileGrid = roomModel.tileGrid;
+        this.tileTypes = roomModel.tileTypes;
     }
 }
 
@@ -65,4 +68,19 @@ Room.prototype.transferEnter = function (particleMover) {
     if(indexParticle !== -1) { return;}
     // Add mover to particles list
     this.particles.push(particleMover);
+}
+
+//-- Tiles ---------------------------------------
+Room.prototype.tileAt = function TileAt(posX, posY) {
+    if(posX === undefined) { throw 'bad x'}
+    if(posY === undefined) { throw 'bad y'}
+    if(posX < 0 || posX >= this.width) { return null;}
+    if(posY < 0 || posY >= this.height) { return null;}
+    const indexCompound = posY*this.width + posX;
+    const indexTile = this.tileGrid[indexCompound];
+    const tileModel = this.tileTypes[indexTile];
+    const tileProxy = new Proxy(tileModel, {});
+    tileProxy.x = posX;
+    tileProxy.y = posY;
+    return tileProxy;
 }

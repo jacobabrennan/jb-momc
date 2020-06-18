@@ -12,12 +12,24 @@ Done:
     Main game loop exists
     Player can be moved via keyboard commands
     Player can transfer between rooms (on the client)
-
-Next steps:
     Tell the server about room transfers
     Connect clients to each other on room transfers
     Make WebRTC data channel
-    Send player position data
+    Send player position data on movement
     Make WebRTC audio channel
     Make audio graphs
+    Send player position data on connection (still a little wonky)
+    Refactor audio graphs
+    Refactor WebRTC/Audio -> Player
+    Spacialize audio
+    Rooms composed of tiles
+
+Next steps:
+    Movement takes tiles into consideration
+    Warp tiles
+    Refactor particles, characters, and players
+    Create environment types (atoms)
+    Map environment
     
+Deferred
+    Add video

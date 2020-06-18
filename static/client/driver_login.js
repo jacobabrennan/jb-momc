@@ -9,15 +9,18 @@ import {
     CSS_CLASS_ACTIVE,
 } from './driver.js';
 import { messageSend } from './network.js';
+import { microphoneRequest } from './audio.js';
 
 //------------------------------------------------
 export default driverCreate({
     configure({ idLoginForm }) {
         this.containerId = idLoginForm;
         const formLogin = document.getElementById(idLoginForm);
-        formLogin.addEventListener('submit', function (eventSubmit) {
+        formLogin.addEventListener('submit', async function (eventSubmit) {
             //
             eventSubmit.preventDefault();
+            //
+            await microphoneRequest();
             //
             const inputUsername = formLogin.elements['username'];
             const inputPassword = formLogin.elements['password'];

@@ -3,13 +3,14 @@
 //==============================================================================
 
 //-- Dependencies --------------------------------
+import { SIZE_TILE } from '../constants.js';
 
 //-- Constants -----------------------------------
 
 //------------------------------------------------
 const graphics = {};
 class Graphic {
-    constructor(id, url, width=16, height=16) {
+    constructor(id, url, width=SIZE_TILE, height=SIZE_TILE) {
         this.id = id;
         this.url = url;
         this.width = width;
@@ -32,6 +33,8 @@ class Graphic {
 const graphicLoadingList = [
     new Graphic('kitten', 'rsc/144.jpg', 256, 144),
     new Graphic('bird', 'rsc/bird.png'),
+    new Graphic('grass', 'rsc/grass.png'),
+    new Graphic('sky', 'rsc/sky.png'),
 ];
 
 //------------------------------------------------

@@ -4,17 +4,13 @@
 
 //-- Dependencies --------------------------------
 import {
-    SIZE_TILE,
+    MOVEMENT_SOLID,
     MOVEMENT_EMPTY,
-} from '../constants.js';
+} from '../../constants.js';
+import Tile from '../tile.js';
 
 //------------------------------------------------
-export default class Particle {
-    roomId = null
-    x = 0
-    y = 0
-    movement = MOVEMENT_EMPTY
-    width = SIZE_TILE
-    height = SIZE_TILE
-    graphic = 'bird'
+export default {
+    grass: new Tile('grass', MOVEMENT_SOLID),
+    sky: new Tile('sky', MOVEMENT_EMPTY),
 }
