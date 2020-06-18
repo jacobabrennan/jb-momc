@@ -18,7 +18,6 @@ export function playerGet(idPlayer) {
 }
 export function playerLogin(idPlayer, client) {
     if(idPlayer in players) {
-        console.log('derp');
         idPlayer = `${idPlayer}-${Math.floor(Math.random()*8999) + 1000}`;
     }
     let player;
