@@ -15,14 +15,14 @@ let streamAudioLocal;
 
 //-- State Management ----------------------------
 export async function microphoneRequest() {
-    try {
-        streamAudioLocal = await navigator.mediaDevices.getUserMedia({
-            video: true, audio: true,
-        });
-    } catch {
-        const audioConstraints = {audio: true};
-        streamAudioLocal = await navigator.mediaDevices.getUserMedia(audioConstraints);
-    }
+    // try {
+    //     streamAudioLocal = await navigator.mediaDevices.getUserMedia({
+    //         video: true, audio: true,
+    //     });
+    // } catch {
+    const audioConstraints = {audio: true};
+    streamAudioLocal = await navigator.mediaDevices.getUserMedia(audioConstraints);
+    // }
 }
 export function streamAudioLocalGet() {
     return streamAudioLocal;

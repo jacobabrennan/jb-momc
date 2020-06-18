@@ -55,7 +55,7 @@ export function spritesGet() {
         sprites.push({
             x: player.x,
             y: player.y,
-            playerId: player.id,
+            playerId: playerId,
         });
     }
     return sprites;

@@ -17,12 +17,17 @@ export function playerGet(idPlayer) {
     return players[idPlayer];
 }
 export function playerLogin(idPlayer, client) {
-    //
-    let player = players[idPlayer];
-    if(player) {
-        player.clientAttach(client);
-        return player;
+    if(idPlayer in players) {
+        console.log('derp');
+        idPlayer = `${idPlayer}-${Math.floor(Math.random()*8999) + 1000}`;
     }
+    let player;
+    //
+    // let player = players[idPlayer];
+    // if(player) {
+    //     player.clientAttach(client);
+    //     return player;
+    // }
     //
     player = new Player(idPlayer);
     player.clientAttach(client);

@@ -6,6 +6,7 @@
 import {
     SIZE_WIDTH_DEFAULT,
     SIZE_HEIGHT_DEFAULT,
+    DOM_STYLE_DYNAMIC,
 } from '../constants.js';
 import { graphicGet } from './resource_library.js';
 import client from './index.js';
@@ -27,6 +28,13 @@ export async function setup({ idGameArea }) {
     // Configure the client display area
     canvas.width = SIZE_WIDTH_DEFAULT;
     canvas.height = SIZE_HEIGHT_DEFAULT;
+    //
+    const elementStyle = document.createElement('style');
+    const DISPLAY_FONT_SIZE = 8;
+    const DISPLAY_FONT_FAMILY = 'press_start_k_regular';
+    elementStyle.innerText = DOM_STYLE_DYNAMIC;
+    context.font = `${DISPLAY_FONT_SIZE}px ${DISPLAY_FONT_FAMILY}`;
+    document.head.appendChild(elementStyle);
     // Begin animating
     animationIterate(0);
 }
@@ -67,4 +75,17 @@ export function drawImage(idGraphic, posX, posY) {
     let theGraphic = graphicGet(idGraphic);
     if(!theGraphic) { return;}
     theGraphic.draw(context, drawX, drawY);
+}
+export function drawText(textString, posX, posY) {
+    let drawX = posX - Math.floor((textString.length/2) * 8);
+    let drawY = SIZE_HEIGHT_DEFAULT - posY;
+    context.save();
+    context.fillStyle = 'black';
+    context.fillText(textString, drawX+1, drawY+1);
+    context.fillText(textString, drawX-1, drawY+1);
+    context.fillText(textString, drawX+1, drawY-1);
+    context.fillText(textString, drawX-1, drawY-1);
+    context.fillStyle = 'white';
+    context.fillText(textString, drawX, drawY);
+    context.restore();
 }

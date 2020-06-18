@@ -11,6 +11,7 @@ import {
 import {
     playerLogin,
     playerGet,
+    playerLogout,
 } from './player.js';
 
 //-- Constants -----------------------------------
@@ -30,7 +31,7 @@ export default class Client {
 Client.prototype.dataSetup = function (socket) {
     this.socket = socket;
     socket.on(EVENT_DISCONNECT, (eventClose) => {
-        // clientRemove(this);
+        playerLogout(this.playerId);
     });
     socket.on(EVENT_MESSAGE, (eventMessage) => {
         eventMessage = JSON.parse(eventMessage);
@@ -63,6 +64,7 @@ Client.prototype.dataReceive = function (action, data) {
         }
         case ACTION_WEBRTC_SIGNAL: {
             const player = playerGet(data.targetPlayerId);
+            if(!player) { return;}
             player.client.dataSend(ACTION_WEBRTC_SIGNAL, {
                 originatingPlayerId: this.playerId,
                 data: data.data,

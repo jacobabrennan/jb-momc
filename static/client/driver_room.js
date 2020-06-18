@@ -20,6 +20,7 @@ import {
 import {
     blank,
     drawImage,
+    drawText,
 } from './graphics.js';
 import { commandState } from './key_state.js';
 import { spritesGet } from './playerRemote.js';
@@ -94,6 +95,8 @@ export default driverCreate({
         }
         const sprites = spritesGet();
         for(let sprite of sprites) {
+            const drawX = Math.floor(sprite.x+posXCamera+16/2);
+            drawText(sprite.playerId, drawX, sprite.y+24);
             drawImage('bird', sprite.x+posXCamera, sprite.y);
         }
     },
