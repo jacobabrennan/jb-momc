@@ -6,7 +6,7 @@
 import { server } from './server.js';
 
 //-- Constants -----------------------------------
-const PORT = 443;
+const PORT = process.env.PORT || 7231;
 const MESSAGE_SERVER_LISTENING = `Server open on port ${PORT}`;
 
 //------------------------------------------------
