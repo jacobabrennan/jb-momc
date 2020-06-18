@@ -89,5 +89,5 @@ Room.prototype.tileAt = function TileAt(posX, posY) {
     const tileProxy = new Proxy(tileModel, {});
     tileProxy.x = posX;
     tileProxy.y = posY;
-    return tileProxy;
+    return tileProxy; 
 }
